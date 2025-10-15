@@ -24,10 +24,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#">Главная<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-item nav-link active" th:href="@{/createAccident}">Добавить инцидент</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -72,12 +72,15 @@
         <tbody>
             <tr th:each="accident: ${accidents}">
                 <td th:text="${accident.id}"></td>
-                <td th:text="${accident.name}"></td>
+                <td>
+                    <a th:href="@{|/formUpdateAccident?id=${accident.id}|}">
+                        <i class="fa fa-edit"></i>
+                        <span th:text="${accident.name}"></span> </a>
+                </td>
                 <td th:text="${accident.text}"></td>
                 <td th:text="${accident.address}"/>
             </tr>
         </tbody>
-        <p th:if="${accidents == null}">Список accidents null</p>
     </table>
 </div>
 </div>
