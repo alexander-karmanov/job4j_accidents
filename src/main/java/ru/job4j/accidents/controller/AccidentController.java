@@ -12,7 +12,6 @@ import ru.job4j.accidents.service.AccidentService;
 
 import java.util.Optional;
 
-
 @Controller
 @AllArgsConstructor
 public class AccidentController {
