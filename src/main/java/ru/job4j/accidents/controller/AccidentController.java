@@ -15,7 +15,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 public class AccidentController {
-    private final AccidentService accidents;
+    private final AccidentService accidentService;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident() {
@@ -24,13 +24,13 @@ public class AccidentController {
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident) {
-        accidents.create(accident);
+        accidentService.create(accident);
         return "redirect:/index";
     }
 
     @GetMapping("/formUpdateAccident")
     public String edit(@RequestParam("id") int id, Model model) {
-        Optional<Accident> accident = this.accidents.getById(id);
+        Optional<Accident> accident = accidentService.getById(id);
         if (accident.isPresent()) {
             model.addAttribute("accident", accident);
             return "editAccident";
@@ -41,7 +41,7 @@ public class AccidentController {
 
     @PostMapping("/editAccident")
     public String update(@ModelAttribute Accident accident, Model model) {
-        if (accidents.update(accident)) {
+        if (accidentService.update(accident)) {
             return "redirect:/index";
         }
         model.addAttribute("message", "Update error");
