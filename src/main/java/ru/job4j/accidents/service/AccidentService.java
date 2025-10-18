@@ -13,13 +13,16 @@ public class AccidentService {
 
     private final AccidentMem accidentMem;
 
-    @Autowired
-    public AccidentService(AccidentMem accidentMem) {
-        this.accidentMem = accidentMem;
+    private final AccidentTypeService type;
 
-        create(new Accident(1, "name1", "text1", "address1"));
-        create(new Accident(2, "name2", "text2", "address2"));
-        create(new Accident(3, "name3", "text3", "address3"));
+    @Autowired
+    public AccidentService(AccidentMem accidentMem, AccidentTypeService type) {
+        this.accidentMem = accidentMem;
+        this.type = type;
+
+        create(new Accident(1, "name1", "text1", "address1", this.type.getById(1)));
+        create(new Accident(2, "name2", "text2", "address2", this.type.getById(2)));
+        create(new Accident(3, "name3", "text3", "address3", this.type.getById(3)));
     }
 
     public void create(Accident accident) {
