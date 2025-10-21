@@ -15,14 +15,17 @@ public class AccidentService {
 
     private final AccidentTypeService type;
 
+    private final RuleService rule;
+
     @Autowired
-    public AccidentService(AccidentMem accidentMem, AccidentTypeService type) {
+    public AccidentService(AccidentMem accidentMem, AccidentTypeService type, RuleService rule) {
         this.accidentMem = accidentMem;
         this.type = type;
+        this.rule = rule;
 
-        create(new Accident(1, "name1", "text1", "address1", this.type.getById(1)));
-        create(new Accident(2, "name2", "text2", "address2", this.type.getById(2)));
-        create(new Accident(3, "name3", "text3", "address3", this.type.getById(3)));
+        create(new Accident(1, "name1", "text1", "address1", this.type.getById(1), this.rule.findAll()));
+        create(new Accident(2, "name2", "text2", "address2", this.type.getById(2), this.rule.findAll()));
+        create(new Accident(3, "name3", "text3", "address3", this.type.getById(3), this.rule.findAll()));
     }
 
     public void create(Accident accident) {

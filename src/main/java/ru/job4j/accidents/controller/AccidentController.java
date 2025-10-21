@@ -1,5 +1,6 @@
 package ru.job4j.accidents.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,12 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
+import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.service.AccidentService;
 import ru.job4j.accidents.service.AccidentTypeService;
+import ru.job4j.accidents.service.RuleService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -22,16 +26,21 @@ public class AccidentController {
     private final AccidentService accidentService;
     private final AccidentTypeService type;
 
+    private final RuleService rule;
+
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         List<AccidentType> types = type.findAll();
+        Set<Rule> rules = rule.findAll();
         model.addAttribute("types", types);
+        model.addAttribute("rules", rules);
         return "createAccident";
     }
 
     @PostMapping("/saveAccident")
-    public String save(@ModelAttribute Accident accident) {
+    public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
         accidentService.create(accident);
+        String[] ids = req.getParameterValues("rIds");
         return "redirect:/index";
     }
 
