@@ -15,10 +15,7 @@ import ru.job4j.accidents.service.AccidentService;
 import ru.job4j.accidents.service.AccidentTypeService;
 import ru.job4j.accidents.service.RuleService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @AllArgsConstructor
@@ -39,8 +36,12 @@ public class AccidentController {
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
-        accidentService.create(accident);
         String[] ids = req.getParameterValues("rIds");
+        if (ids != null) {
+            Set<Rule> rules = rule.findAllById(ids);
+            accident.setRules(new HashSet<>(rules));
+        }
+        accidentService.create(accident);
         return "redirect:/index";
     }
 
