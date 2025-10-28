@@ -50,18 +50,38 @@ public class AccidentController {
         Optional<Accident> accident = accidentService.getById(id);
         if (accident.isPresent()) {
             model.addAttribute("accident", accident);
+            model.addAttribute("types", type.findAll());
             return "editAccident";
         }
-        model.addAttribute("message", "Not Found");
+        model.addAttribute("message", "Accident not found");
         return "errors/404";
     }
 
     @PostMapping("/editAccident")
-    public String update(@ModelAttribute Accident accident, Model model) {
+    public String update(@ModelAttribute Accident accident, @RequestParam("typeId") int typeId, Model model) {
+        AccidentType selectedType = type.getById(typeId);
+        if (selectedType == null) {
+            model.addAttribute("accident", accident);
+            model.addAttribute("types", type.findAll());
+            model.addAttribute("error", "Invalid accident type selected.");
+            return "editAccident";
+        }
+        accident.setType(selectedType);
+
+        if (accident.getName() == null || accident.getName().trim().isEmpty()) {
+            model.addAttribute("accident", accident);
+            model.addAttribute("types", type.findAll());
+            model.addAttribute("error", "Name cannot be empty.");
+            return "editAccident";
+        }
+
         if (accidentService.update(accident)) {
             return "redirect:/index";
+        } else {
+            model.addAttribute("accident", accident);
+            model.addAttribute("types", type.findAll());
+            model.addAttribute("error", "Update failed. Please try again.");
+            return "editAccident";
         }
-        model.addAttribute("message", "Update error");
-        return "errors/404";
     }
 }

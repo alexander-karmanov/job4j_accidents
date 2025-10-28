@@ -42,6 +42,14 @@
                         <input type="text" class="form-control" th:field="*{text}" name="text" id="text">
                         <label for="address">Адрес</label>
                         <input type="text" class="form-control" th:field="*{address}" name="address" id="address">
+
+                        <label for="typeId">Тип аварии</label>
+                        <select class="form-control" name="typeId" id="typeId" required th:if="${types != null and !types.isEmpty()}">
+                            <option value="">Выберите тип</option>
+                            <option th:each="t: ${types}" th:value="${t.id}" th:text="${t.name}"></option>
+
+                        </select>
+
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                 </form>
