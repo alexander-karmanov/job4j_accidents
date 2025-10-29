@@ -37,19 +37,19 @@
                     <input type="hidden" name="id" th:field="*{id}">
                     <div class="form-group">
                         <label for="name">Имя</label>
-                        <input type="text" class="form-control"th:field="*{name}"  name="name" id="name">
+                        <input type="text" class="form-control" th:field="*{name}" name="name" id="name" required>
+
                         <label for="text">Текст</label>
-                        <input type="text" class="form-control" th:field="*{text}" name="text" id="text">
+                        <input type="text" class="form-control" th:field="*{text}" name="text" id="text" required>
+
                         <label for="address">Адрес</label>
-                        <input type="text" class="form-control" th:field="*{address}" name="address" id="address">
+                        <input type="text" class="form-control" th:field="*{address}" name="address" id="address" required>
 
                         <label for="typeId">Тип аварии</label>
                         <select class="form-control" name="typeId" id="typeId" required th:if="${types != null and !types.isEmpty()}">
                             <option value="">Выберите тип</option>
                             <option th:each="t: ${types}" th:value="${t.id}" th:text="${t.name}"></option>
-
                         </select>
-
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                 </form>

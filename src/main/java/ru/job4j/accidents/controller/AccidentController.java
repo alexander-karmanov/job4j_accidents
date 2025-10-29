@@ -16,6 +16,7 @@ import ru.job4j.accidents.service.AccidentTypeService;
 import ru.job4j.accidents.service.RuleService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -58,24 +59,13 @@ public class AccidentController {
     }
 
     @PostMapping("/editAccident")
-    public String update(@ModelAttribute Accident accident, @RequestParam("typeId") int typeId, Model model) {
+    public String update(@ModelAttribute Accident accident,
+                         @RequestParam("typeId") int typeId,
+                         Model model) {
         AccidentType selectedType = type.getById(typeId);
-        if (selectedType == null) {
-            model.addAttribute("accident", accident);
-            model.addAttribute("types", type.findAll());
-            model.addAttribute("error", "Invalid accident type selected.");
-            return "editAccident";
-        }
         accident.setType(selectedType);
-
-        if (accident.getName() == null || accident.getName().trim().isEmpty()) {
-            model.addAttribute("accident", accident);
-            model.addAttribute("types", type.findAll());
-            model.addAttribute("error", "Name cannot be empty.");
-            return "editAccident";
-        }
-
-        if (accidentService.update(accident)) {
+        boolean success = accidentService.update(accident);
+        if (success) {
             return "redirect:/index";
         } else {
             model.addAttribute("accident", accident);
