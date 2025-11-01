@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
-@Configuration
+/* @Configuration
 @PropertySource("classpath:db.properties")
-@EnableTransactionManagement
+@EnableTransactionManagement */
 public class JdbcConfig {
     @Bean
     public DataSource ds(@Value("${jdbc.driver}") String driver,
