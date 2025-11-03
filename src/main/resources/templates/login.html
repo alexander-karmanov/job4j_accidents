@@ -17,7 +17,7 @@
 <div class="container py-3">
     <main class="form-signin">
         <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
-        <form th:action="@{/accident/login}" method="post">
+        <form th:action="@{/login}" method="post">
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="username" name="username">
                 <label for="username">User name</label>
@@ -28,7 +28,7 @@
             </div>
             <div class="col-5">
                 <div class="row">
-                    <div class="col-6"><a class="btn btn-primary w-100" th:href="@{/accident/reg}">Зарегистрироваться</a></div>
+                    <div class="col-6"><a class="btn btn-primary w-100" th:href="@{/reg}">Зарегистрироваться</a></div>
                     <div class="col-6"><button class="btn btn-success w-100" type="submit">Авторизация</button>
                     </div>
                 </div>
