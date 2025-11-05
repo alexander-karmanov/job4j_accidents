@@ -3,42 +3,42 @@ package ru.job4j.accidents.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private DataSource ds;
+    private final DataSource ds;
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(ds)
-                .usersByUsernameQuery("select username, password, enabled "
-                        + "from users "
-                        + "where username = ?")
-                .authoritiesByUsernameQuery(
-                        " select u.username, a.authority "
-                                + "from authorities as a, users as u "
-                                + "where u.username = ? and u.authority_id = a.id");
+    public SecurityConfig(DataSource ds) {
+        this.ds = ds;
     }
 
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/login")
-                .permitAll()
-                .antMatchers("/**")
-                .hasAnyRole("ADMIN", "USER")
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers("/login", "/reg").permitAll()
+                .anyRequest().hasAnyRole("ADMIN", "USER")
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
                 .permitAll()
                 .and()
@@ -47,12 +47,28 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .permitAll()
                 .and()
-                .csrf()
-                .disable();
+                .csrf().disable();
+        return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(ds);
+        return manager;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, UserDetailsService userDetailsService,
+                                                       PasswordEncoder passwordEncoder) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder)
+                .and()
+                .build();
     }
 }
