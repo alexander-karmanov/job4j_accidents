@@ -30,7 +30,6 @@ public class RegControl {
     public String regSave(@ModelAttribute User user, Model model) {
         if (userService.existsByUsername(user.getUsername())) {
             model.addAttribute("message", "Пользователь с таким именем уже существует");
-            return "reg";
         }
         user.setEnabled(true);
         user.setPassword(encoder.encode(user.getPassword()));
