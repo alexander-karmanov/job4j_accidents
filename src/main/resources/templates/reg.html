@@ -17,15 +17,20 @@
 <div class="container py-3">
     <main class="form-signin">
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
+
+        <div th:if="${message}" style="color:red; margin-bottom:10px;">
+            <p th:text="${message}"></p>
+        </div>
+
         <form th:action="@{/reg}" method="post" name="login">
             <table>
                 <tr>
                     <td>UserName:</td>
-                    <td><input type="text" name="username" /></td>
+                    <td><input type="text" name="username" required/></td>
                 </tr>
                 <tr>
                     <td>Password:</td>
-                    <td><input type="password" name="password" /></td>
+                    <td><input type="password" name="password" required/></td>
                 </tr>
                 <tr>
                     <td colspan="2">

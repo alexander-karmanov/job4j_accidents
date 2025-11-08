@@ -11,6 +11,8 @@ import ru.job4j.accidents.model.User;
 import ru.job4j.accidents.service.AuthorityService;
 import ru.job4j.accidents.service.UserService;
 
+import java.util.Optional;
+
 @Controller
 public class RegControl {
 
@@ -28,15 +30,15 @@ public class RegControl {
     public String regSave(@ModelAttribute User user, Model model) {
         if (userService.existsByUsername(user.getUsername())) {
             model.addAttribute("message", "Пользователь с таким именем уже существует");
+            return "reg";
         }
-        try {
-            user.setEnabled(true);
-            user.setPassword(encoder.encode(user.getPassword()));
-            user.setAuthority(authorities.findByAuthority("ROLE_USER"));
-            userService.save(user);
-        } catch (DataIntegrityViolationException exception) {
-            model.addAttribute("message", "Ошибка при сохранении пользователя");
-            return "redirect:/error";
+        user.setEnabled(true);
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setAuthority(authorities.findByAuthority("ROLE_USER"));
+        Optional<User> savedUser = userService.save(user);
+        if (savedUser.isEmpty()) {
+            model.addAttribute("message", "Произошла ошибка при сохранении пользователя");
+            return "reg";
         }
         return "redirect:/login";
     }

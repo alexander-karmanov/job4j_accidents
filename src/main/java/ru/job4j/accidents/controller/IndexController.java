@@ -19,7 +19,7 @@ public class IndexController {
 
     private final AccidentHibernate accidents;
 
-    @GetMapping("/")
+    @GetMapping({"/index", "/"})
     public String index(Model model) {
         model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         model.addAttribute("accidents", accidentService.findAll());

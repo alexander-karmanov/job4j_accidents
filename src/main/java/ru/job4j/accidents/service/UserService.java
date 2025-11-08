@@ -1,6 +1,8 @@
 package ru.job4j.accidents.service;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.User;
 import ru.job4j.accidents.repository.UserRepository;
@@ -12,14 +14,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
+
     public Optional<User> save(User user) {
-        Optional<User> rsl = Optional.empty();
+        Optional<User> result = Optional.empty();
         try {
-            rsl = Optional.of(userRepository.save(user));
+            User savedUser = userRepository.save(user);
+            result = Optional.of(savedUser);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("Error saving user '{}': {}", user.getUsername(), ex.getMessage());
         }
-        return rsl;
+        return result;
     }
 
     public boolean existsByUsername(String username) {
