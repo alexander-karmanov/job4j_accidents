@@ -28,9 +28,6 @@ public class RegControl {
 
     @PostMapping("/reg")
     public String regSave(@ModelAttribute User user, Model model) {
-        if (userService.existsByUsername(user.getUsername())) {
-            model.addAttribute("message", "Пользователь с таким именем уже существует");
-        }
         user.setEnabled(true);
         user.setPassword(encoder.encode(user.getPassword()));
         user.setAuthority(authorities.findByAuthority("ROLE_USER"));
