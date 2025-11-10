@@ -24,7 +24,7 @@ public class RuleService {
     }
 
     public Set<Rule> findAllById(String[] ids) {
-        Set<String> idSet = new HashSet<>(Arrays.asList(ids)); // создаем множество ID для быстрого поиска
+        Set<String> idSet = new HashSet<>(Arrays.asList(ids));
         return ruleMem.getAll().stream()
                 .filter(rule -> idSet.contains(rule.getId()))
                 .collect(Collectors.toSet());
